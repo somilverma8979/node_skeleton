@@ -13,7 +13,14 @@ Shop = (function() {
 
   Shop.prototype["index"] = function(req) {
     return new Promise( function(resolve, reject) {
-      resolve({"status":200,"list":[]});
+
+      var shop = global_wagner.get('shop');
+      shop.findAll({attributes: ['shop_name', 'shop_url']}).then(result => {
+          resolve(result);
+      }).catch(error=> {
+          reject(error);
+      });
+
     });
   };
 

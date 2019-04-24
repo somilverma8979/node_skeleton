@@ -3,7 +3,7 @@
     "bot_account": "rahulsps",
     "google_analytics": "",
     "db": {
-        "database": "somedatabasename",
+        "database": "node_skeleton",
         "username": "root",
         "password": "root",
         "options": {
