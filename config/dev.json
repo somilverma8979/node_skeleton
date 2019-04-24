@@ -1,0 +1,39 @@
+{
+    "app_route": "http://localhost:3000/",
+    "bot_account": "rahulsps",
+    "google_analytics": "",
+    "db": {
+        "database": "somedatabasename",
+        "username": "root",
+        "password": "root",
+        "options": {
+            "timezone": "+05:30",
+            "dialect": "mysql",
+            "dialectOptions": {
+                "decimalNumbers": true
+            },
+            "port": 3306,
+            "pool": {
+                "max": 50,
+                "min": 0,
+                "idle": 500
+            },
+            "replication": {
+                "write": {
+                    "username": "root",
+                    "password": "root",
+                    "host": "localhost",
+                    "port": 3306
+                },
+                "read": [
+                    {
+                        "username": "root",
+                        "password": "root",
+                        "host": "localhost",
+                        "port": 3306
+                    }
+                ]
+            }
+        }
+    }
+}
