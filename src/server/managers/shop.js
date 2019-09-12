@@ -1,6 +1,5 @@
 const Promise   = require('bluebird');
 const config    = require('config');
-const steem     = require('steem');
 const _         = require('underscore');
 
 Shop = (function() {
