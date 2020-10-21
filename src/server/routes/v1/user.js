@@ -2,10 +2,19 @@ const fs = require('fs');
 const path = require('path');
 const async = require('async');
 const HTTPStatus = require('http-status');
+const { check, validationResult } = require('express-validator');
+
 
 module.exports = function (app, wagner) {
 
-  app.get('/v1/shop', function (req, res) {
+  app.get('/v1/shop',  [
+    check('full_name').isEmpty(),
+    check('email_id').isEmpty(),
+    check('city').isEmpty(),
+    check('password').isEmpty()
+  ], function (req, res) {
+    const errors = validationResult(req)
+    console.log(errors)
     wagner.get('User')["index"](req).then(function (result) {
       res.status(HTTPStatus.OK).json({ success: '1', message: "success", data: result });
     }).catch(function (error) {
@@ -14,7 +23,16 @@ module.exports = function (app, wagner) {
     });
   });
 
-  app.post('/v1/addUser', function (req, res) {
+  app.post('/v1/addUser',[
+    check('full_name').exists().withMessage("Full name field is required."),
+    check('email_id').exists().withMessage("Email Id field is required."),
+    check('city').exists().withMessage("City field is required."),
+    check('password').exists().withMessage("Password field is required.")
+  ], function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HTTPStatus.UNPROCESSABLE_ENTITY).json({ success: '0', message: "failure", data: errors });
+    }
     wagner.get('User')["addUser"](req).then(function (result) {
       res.status(HTTPStatus.OK).json({ success: '1', message: "success", data: result });
     }).catch(function (error) {
@@ -32,7 +50,16 @@ module.exports = function (app, wagner) {
     });
   });
 
-  app.put('/v1/updateUser', function (req, res) {
+  app.put('/v1/updateUser',[
+    check('full_name').exists().withMessage("Full name field is required."),
+    check('email_id').exists().withMessage("Email id field is required."),
+    check('city').exists().withMessage("City field is required."),
+    check('userId').exists().withMessage("User id field is required.")
+  ], function (req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HTTPStatus.UNPROCESSABLE_ENTITY).json({ success: '0', message: "failure", data: errors });
+    }
     wagner.get('User')["updateUser"](req).then(function (result) {
       res.status(HTTPStatus.OK).json({ success: '1', message: "success", data: result });
     }).catch(function (error) {

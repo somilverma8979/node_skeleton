@@ -1,6 +1,7 @@
 const Promise = require('bluebird');
 var bcrypt = require('bcryptjs');
 
+
 User = (function () {
 
   var global_wagner;
@@ -11,9 +12,9 @@ User = (function () {
 
   User.prototype["addUser"] = function (req) {
     return new Promise(function (resolve, reject) {
-      if (!req.body.full_name || !req.body.email_id || !req.body.password || !req.body.city) {
-        reject({ message: "All fields (name, email, city, password) are required. " })
-      }
+      // if (!req.body.full_name || !req.body.email_id || !req.body.password || !req.body.city) {
+      //   reject({ message: "All fields (name, email, city, password) are required. " })
+      // }
       var Persons = global_wagner.get("Persons");
       let payload = {
         full_name: req.body.full_name,
