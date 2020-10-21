@@ -66,7 +66,7 @@ User = (function () {
         let personData = await Persons.findOne({ _id: req.body.userId })
         console.log(personData)
         if (personData != null || personData != undefined) {
-          await Persons.updateOne(
+          let updatedData = await Persons.updateOne(
             { _id: req.body.userId },
             {
               $set: {
@@ -75,15 +75,10 @@ User = (function () {
                 city: req.body.city
               }
             }
-          ).then(data => {
-            resolve({ message: "User updated successfully." })
-          }).catch(err => {
-            if (err.kind == "ObjectId") {
-              reject({ message: "User does not exist." })
-            } else {
-              reject(err)
-            }
-          })
+          )
+          if(updatedData) {
+            resolve({message: "User updated successfully."})
+          }
           console.log(updatePerson)
         } else {
           reject({ message: "User does not exist." })
@@ -104,13 +99,12 @@ User = (function () {
         let personData = await Persons.findOne({ _id: req.body.userId })
         console.log(personData)
         if (personData != null || personData != undefined) {
-          await Persons.deleteOne(
+          let deleteData = await Persons.deleteOne(
             { _id: req.body.userId },
-          ).then(data => {
-            resolve({ message: "User deleted successfully.", })
-          }).catch(err => {
-            reject(err)
-          })
+          )
+          if(deleteData) {
+            resolve({message: "User deleted successfully."})
+          }
         } else {
           reject({ message: "User does not exist." })
         }
