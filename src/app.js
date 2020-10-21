@@ -21,7 +21,7 @@ const sequelize = require('./server/utils/db')(wagner);
 const dependencies = require('./server/utils/dependencies')(wagner);
 
 // include the models, managers or any other utils here
-require('./server/models')(sequelize, wagner);
+require('./server/models')(wagner);
 require('./server/managers')(wagner);
 
 app.use(favicon());
