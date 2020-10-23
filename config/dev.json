@@ -1,5 +1,5 @@
 {
-    "app_route": "http://localhost:3000/",
+    "app_route": "http://localhost:3001/",
     "bot_account": "rahulsps",
     "google_analytics": "",
     "db": {

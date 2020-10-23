@@ -6,15 +6,23 @@ const logger  = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const wagner       = require('wagner-core');
+const engine = require('ejs-mate');
+const passport = require('passport');
+
 
 var app = express();
+app.use(passport.initialize());
+app.use(passport.session());
+require('./server/managers/passport')(wagner)
 // Set PORT variable
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // view engine setup
+app.engine('ejs', engine);
 app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'ejs');
 app.set('port', PORT);
+
 
 // add sequelize ORM to wagner dependency manager
 const sequelize = require('./server/utils/db')(wagner);
