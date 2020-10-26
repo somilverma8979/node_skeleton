@@ -1,20 +1,4 @@
 const mongoose = require("mongoose");
-// const personSchema = mongoose.Schema;
-// var Persons = new personSchema({
-//     full_name: {
-//         type: String,
-//         required: true
-//     },
-//     email_id: {
-//         type: String,
-//     },
-//     password: {
-//         type: String,
-//     },
-//     city: {
-//         type: String,
-//     },
-// });
 var person_schema = {
     full_name: {
         type: String,
@@ -29,6 +13,9 @@ var person_schema = {
         type: String,
     },
     city: {
+        type: String,
+    },
+    authToken: {
         type: String,
     },
     resetPasswordToken: {

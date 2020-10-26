@@ -22,6 +22,9 @@ PassPort = (function () {
                 if (!user) {
                     return done(null, false, { message: 'You have entered invalid credentials.' });
                 } else {
+                    var token = jwt.sign({ _id: user._id }, 'privatekey');
+                    user.authToken = token
+                    await user.save()
                     bcrypt.compare(password, user.password, function (err, res2) {
                         if (res2 == false) {
                             return done(null, false, { message: 'You have entered invalid credentials.' });
@@ -41,21 +44,20 @@ PassPort = (function () {
         try {
             var Persons = global_wagner.get("Persons");
             let user = await Persons.findOne({ username: username })
-            // if (user != null || user != undefined) {
-            //     // return done(null, false, { message: 'Username is taken. Please try another one.' });
-            // } else
             if(!user) {
                 bcrypt.genSalt(10, async function (err, salt) {
                     bcrypt.hash(password, salt, async function (err, hash) {
+                        // var token = jwt.sign({ _id: user._id }, 'privatekey');
                         let payload = {
                             username: username,
-                            password: hash
+                            password: hash,
+                            // authToken: token
                         }
-                        console.log(payload)
                         let newPerson = await Persons.create(payload)
                         console.log(newPerson)
                         if (newPerson != null) {
-                            console.log(newPerson)
+                            var token = jwt.sign({ _id: newPerson._id }, 'privatekey');
+                            newPerson.authToken = token
                             return done(null, newPerson);
                         }
                     });

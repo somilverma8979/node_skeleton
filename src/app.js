@@ -8,12 +8,14 @@ const bodyParser   = require('body-parser');
 const wagner       = require('wagner-core');
 const engine = require('ejs-mate');
 const passport = require('passport');
-
+const {graphqlHTTP} = require('express-graphql');
 
 var app = express();
 app.use(passport.initialize());
 app.use(passport.session());
-require('./server/managers/passport')(wagner)
+require('./server/utils/dependencies/passport')(wagner)
+var schema = require('./server/managers/schema')
+// new schema.Schema(wagner)
 // Set PORT variable
 const PORT = process.env.PORT || 3001;
 
@@ -31,7 +33,8 @@ const dependencies = require('./server/utils/dependencies')(wagner);
 // include the models, managers or any other utils here
 require('./server/models')(wagner);
 require('./server/managers')(wagner);
-
+app.use('/graphql', graphqlHTTP({ schema: schema.graphqlObj, graphiql: true}));
+wagner.get("Schema")
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -81,6 +84,13 @@ app.use(function(err, req, res, next) {
 // Set the PORT and start listening
 app.set('port', process.env.PORT || PORT);
 app.listen(app.get('port'));
+// app.use('/graphql', graphqlHTTP({
+//     //Directing express-graphql to use this schema to map out the graph 
+//     schema,
+//     //Directing express-graphql to use graphiql when goto '/graphql' address in the browser
+//     //which provides an interface to make GraphQl queries
+//     graphiql:true
+// }));
 console.log('Running on http://localhost:' + PORT);
 
 // export the app instance

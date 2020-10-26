@@ -1,12 +1,11 @@
 const Promise = require('bluebird');
-var bcrypt = require('bcryptjs');
 var passport = require('passport');
-const jwt = require('jsonwebtoken')
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
+const config = require('config');
+const dbconfig = config.get('nodemailer_auth');
 
 Auth = (function () {
-
   var global_wagner;
 
   function Auth(wagner) {
@@ -23,13 +22,9 @@ Auth = (function () {
           secure: false,
           requireTLS: true,
           service: 'gmail',
-          // auth: {
-          //   user: 'somil.verma@agicent.com',
-          //   pass: 'somilverma49'
-          // }
           auth: {
-            user: 'somilverma1996@gmail.com',
-            pass: '8979822775'
+            user: dbconfig.user,
+            pass: dbconfig.pass
           }
         });
         const mailOptions = {
@@ -74,15 +69,13 @@ Auth = (function () {
             reject(err)
           };
           if (user) {
-            var token = jwt.sign({ _id: user._id }, 'privatekey');
             var userDict = {
               _id: user._id,
               full_name: user.full_name,
               email_id: user.email_id,
               city: user.city
             }
-
-            resolve({ token: token, user: userDict });
+            resolve({ user: userDict, token: user.authToken });
           } else {
             reject(info);
           };
@@ -102,8 +95,7 @@ Auth = (function () {
             reject(err)
           };
           if (user) {
-            var token = jwt.sign({ _id: user._id }, 'privatekey');
-            resolve({ token: token, user: user });
+            resolve({ user: user });
           } else {
             reject(info);
           };

@@ -4,5 +4,9 @@
     "google_analytics": "",
     "db": {
         "mongo_uri": "mongodb+srv://somil_verma:89798@cluster0.xie6g.mongodb.net/test?retryWrites=true&w=majority"
+    },
+    "nodemailer_auth": {
+        "user": "somilverma1996@gmail.com",
+        "pass": "8979822775"
     }
 }

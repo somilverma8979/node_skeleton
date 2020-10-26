@@ -4,7 +4,7 @@ const async = require('async');
 const HTTPStatus = require('http-status');
 const { check, validationResult } = require('express-validator');
 
-module.exports = function (app, wagner, validateToken) {
+module.exports = function (app, wagner) {
 
   app.get('/v1/shop', [
     check('full_name').isEmpty(),

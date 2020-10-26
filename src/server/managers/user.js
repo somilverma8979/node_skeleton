@@ -11,7 +11,7 @@ User = (function () {
   function User(wagner) {
     global_wagner = wagner;
   }
-
+console.log(global_wagner)
   User.prototype["addUser"] = function (req) {
     return new Promise(function (resolve, reject) {
       var Persons = global_wagner.get("Persons");
