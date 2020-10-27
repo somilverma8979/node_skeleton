@@ -28,7 +28,7 @@ Auth = (function () {
           }
         });
         const mailOptions = {
-          from: 'somil.verma@agicent.com',
+          from: dbconfig.user,
           to: req.body.email_id,
           subject: 'Password Reset Request',
           html: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +

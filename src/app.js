@@ -1,14 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const path    = require('path');
+const path = require('path');
 const favicon = require('static-favicon');
-const logger  = require('morgan');
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser   = require('body-parser');
-const wagner       = require('wagner-core');
+const bodyParser = require('body-parser');
+const wagner = require('wagner-core');
 const engine = require('ejs-mate');
 const passport = require('passport');
-const {graphqlHTTP} = require('express-graphql');
+const { graphqlHTTP } = require('express-graphql');
 
 var app = express();
 app.use(passport.initialize());
@@ -29,11 +29,22 @@ app.set('port', PORT);
 // add sequelize ORM to wagner dependency manager
 const sequelize = require('./server/utils/db')(wagner);
 const dependencies = require('./server/utils/dependencies')(wagner);
-
 // include the models, managers or any other utils here
 require('./server/models')(wagner);
 require('./server/managers')(wagner);
-app.use('/graphql', graphqlHTTP({ schema: schema.graphqlObj, graphiql: true}));
+app.use('/graphql', graphqlHTTP({ 
+    schema: schema.graphqlObj, 
+    graphiql: true,
+}));
+// app.use('/graphql', (req, res, next) => {
+//     return graphqlHTTP({
+//         schema: schema.graphqlObj,
+//         graphiql: true,
+//         context: wagner.get("ValidateToken"),
+//         tracing: true,
+//         cacheControl: true,
+//     })(req, res, next);
+// });
 wagner.get("Schema")
 app.use(favicon());
 app.use(logger('dev'));
@@ -43,10 +54,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // include the routes path here
-require('./server/routes')(app,wagner);
+require('./server/routes')(app, wagner);
 
 /// catch 404 and forwarding to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -57,7 +68,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'dev') {
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         res.status(err.status || 500);
         console.log(err.message);
         res.render('error', {
@@ -70,7 +81,7 @@ if (app.get('env') === 'dev') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     console.log(err);
     res.render('error.message', {

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-var person_schema = {
+var user_schema = {
     full_name: {
         type: String,
     },
@@ -23,13 +23,7 @@ var person_schema = {
     },
     resetPasswordExpires: {
         type: Date
-    },
-    isVerified: {
-        type: Boolean
-    },
-    profile_pic: {
-        type: String
     }
 }
-module.exports = new mongoose.Schema(person_schema);
-module.exports.person_schema = person_schema;
+module.exports = new mongoose.Schema(user_schema);
+module.exports.user_schema = user_schema;

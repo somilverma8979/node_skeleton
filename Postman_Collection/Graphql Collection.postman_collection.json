@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "d132a5db-f897-4c46-8a1f-889c89fb0450",
+		"name": "Graphql Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Graphql",
+			"item": [
+				{
+					"name": "{{url}}/graphql/signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n  signup(email_id:\"somil141@gmail.com\", password: \"qwerty\", city: \"Haldwani\", full_name: \"somil verma\" ){\n   email_id,\n   full_name,\n   city\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query{\n    signin(email_id: \"somil141@gmail.com\", password: \"qwerty1\") {\n        email_id,\n        full_name,\n        city,\n        authToken\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/forgotPassword",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query{\n    resetPassword(email_id: \"somilverma49@gmail.com\")\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/changePassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Zjk2OTJlOGE3YTcxZTRkMzUyMWM3YzciLCJpYXQiOjE2MDM3NzAwNjIsImV4cCI6MTYwMzc3MzY2Mn0.coJzD-pQzOc2bVYpiDpZvj6PX8E5pX9nh4qEq9qKOpY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n    changePassword(password: \"qwerty\"){\n         email_id,\n        full_name,\n        city,\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/socialLogin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n    socialLogin(loginType: \"facebook\", token: \"EAAHoDLuOHLkBAAyZBSD7SbAKvTXTuXwm1tq4q8OMd7GKRvVFUvwjPirRuG4DX9LZCa2czrSN3KxOqRShfbUCd0ZCMwoNLAsNWfTpNhwA0BZBCHBYsdBUADKzienognDI7wVYirAOYHqHNTvvBAD4b2GbN1ZCTJ8gX21bO0f9kPQrDFiYlVhpzNS6dgjB3GpRiJ8Yr4ZAdTpgZDZD\",){\n        email_id,\n        authToken\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Graphql Crud Basic",
+			"item": [
+				{
+					"name": "{{url}}/graphql/getAllBooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query{\n  getAllBooks{\n      id\n    name\n    pages\n  }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/addBook",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n    addBook(name:\"Harry Potter2\", pages: \"700\"){\n        id\n        name,\n        pages\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/editBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Zjk2OTJlOGE3YTcxZTRkMzUyMWM3YzciLCJpYXQiOjE2MDM3NjgyMjUsImV4cCI6MTYwMzc3MTgyNX0.VEPR5TTyV1rpx2EEYlk8B2boD95sycZyMSjdggnxTBM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n    editBook(id: \"5f978574b784c80f5b2c7de0\", name: \"ABC\", pages: \"500\"){\n        id,\n        name,\n        pages\n    }\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{url}}/graphql/deleteBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Zjk2OTJlOGE3YTcxZTRkMzUyMWM3YzciLCJpYXQiOjE2MDM3NjgyMjUsImV4cCI6MTYwMzc3MTgyNX0.VEPR5TTyV1rpx2EEYlk8B2boD95sycZyMSjdggnxTBM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation{\n    deleteBook(id:\"5f9786382b46d70ffd45cd19\")\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{url}}/graphql",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
