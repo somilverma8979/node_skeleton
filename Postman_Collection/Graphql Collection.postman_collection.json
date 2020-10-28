@@ -40,7 +40,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query{\n    signin(email_id: \"somil141@gmail.com\", password: \"qwerty1\") {\n        email_id,\n        full_name,\n        city,\n        authToken\n    }\n}",
+								"query": "query{\n    signin(email_id: \"somil141@gmail.com\", password: \"qwerty\") {\n        email_id,\n        full_name,\n        city,\n        authToken\n    }\n}",
 								"variables": ""
 							}
 						},
@@ -253,6 +253,40 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "{{url}}/v1/editProfile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjkyODYyMTdiNTUxMzIxYTYzOTUwOGQiLCJpYXQiOjE2MDM4MDQ3NjN9.xMwN9xucwBWImEE7tUv0VmpUQ_ehOt_IfvXg2e-8mD4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profile_pic",
+							"type": "file",
+							"src": "/home/ankit/Desktop/a4f8f91b31d2c63a015ed34ae8c13bbd.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/v1/editProfile",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"v1",
+						"editProfile"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

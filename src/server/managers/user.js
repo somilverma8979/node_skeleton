@@ -11,7 +11,7 @@ User = (function () {
   function User(wagner) {
     global_wagner = wagner;
   }
-console.log(global_wagner)
+  console.log(global_wagner)
   User.prototype["addUser"] = function (req) {
     return new Promise(function (resolve, reject) {
       var Persons = global_wagner.get("Persons");
@@ -116,8 +116,8 @@ console.log(global_wagner)
     return new Promise(async function (resolve, reject) {
       try {
         passport.authenticate('userLogin', function (err, user, info) {
-          if (err) { 
-            reject(err) 
+          if (err) {
+            reject(err)
           };
           if (user) {
             var token = jwt.sign({ _id: user._id }, 'privatekey');
@@ -128,7 +128,7 @@ console.log(global_wagner)
               city: user.city
             }
 
-            resolve({ token: token, user:userDict });
+            resolve({ token: token, user: userDict });
           } else {
             reject(info);
           };
@@ -144,8 +144,8 @@ console.log(global_wagner)
     return new Promise(async function (resolve, reject) {
       try {
         passport.authenticate('userSignup', function (err, user, info) {
-          if (err) { 
-            reject(err) 
+          if (err) {
+            reject(err)
           };
           if (user) {
             var token = jwt.sign({ _id: user._id }, 'privatekey');
@@ -160,6 +160,30 @@ console.log(global_wagner)
       }
     });
   }
+
+  User.prototype["editProfile"] = function (req) {
+    return new Promise(async function (resolve, reject) {
+      try {
+        let userData = req.decoded
+        let Persons = global_wagner.get("Persons")
+        let user = await Persons.findOne({ _id: userData._id })
+        if (user) {
+          if (!req.file) {
+            reject({ message: 'Please select profile pic' });
+          }else {
+            console.log(req.file)
+            user.profile_pic = req.file.originalname
+            await user.save()
+            resolve(user)
+          }
+        } else {
+          reject({ message: "User not found" })
+        }
+      } catch (err) {
+        reject(err)
+      }
+    });
+  };
 
   return User;
 

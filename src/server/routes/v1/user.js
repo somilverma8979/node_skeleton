@@ -3,6 +3,17 @@ const path = require('path');
 const async = require('async');
 const HTTPStatus = require('http-status');
 const { check, validationResult } = require('express-validator');
+const multer = require('multer');
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+      callback(null, 'public/photos/');
+  },
+  filename: (req, file, cb) => {
+      // console.log(file);
+      cb(null, Date.now() + "_" + file.originalname)
+  }
+});
+var upload = multer({ storage: storage })
 
 module.exports = function (app, wagner) {
 
@@ -69,6 +80,15 @@ module.exports = function (app, wagner) {
 
   app.delete('/v1/deleteUser', validateToken, function (req, res) {
     wagner.get('User')["deleteUser"](req).then(function (result) {
+      res.status(HTTPStatus.OK).json({ success: '1', message: "success", data: result });
+    }).catch(function (error) {
+      console.log(error);
+      res.status(HTTPStatus.NOT_FOUND).json({ success: '0', message: "failure", data: error });
+    });
+  });
+
+  app.post('/v1/editProfile', validateToken, upload.single('profile_pic'), function (req, res) {
+    wagner.get('User')["editProfile"](req).then(function (result) {
       res.status(HTTPStatus.OK).json({ success: '1', message: "success", data: result });
     }).catch(function (error) {
       console.log(error);

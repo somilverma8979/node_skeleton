@@ -9,6 +9,8 @@ const wagner = require('wagner-core');
 const engine = require('ejs-mate');
 const passport = require('passport');
 const { graphqlHTTP } = require('express-graphql');
+const { graphqlUploadExpress } = require('graphql-upload');
+
 
 var app = express();
 app.use(passport.initialize());
@@ -25,17 +27,22 @@ app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'ejs');
 app.set('port', PORT);
 
-
 // add sequelize ORM to wagner dependency manager
 const sequelize = require('./server/utils/db')(wagner);
 const dependencies = require('./server/utils/dependencies')(wagner);
 // include the models, managers or any other utils here
 require('./server/models')(wagner);
 require('./server/managers')(wagner);
-app.use('/graphql', graphqlHTTP({ 
-    schema: schema.graphqlObj, 
-    graphiql: true,
-}));
+// app.use(graphqlUploadExpress({ maxFileSize: 1000000000, maxFiles: 1 }));
+app.use('/graphql', bodyParser.json(),
+    //    apolloUploadExpress({ uploadDir: "./" }),
+    // graphqlUploadExpress({ maxFileSize: 1000000000, maxFiles: 1 }),
+    graphqlHTTP({
+        schema: schema.graphqlObj,
+        graphiql: true,
+    }), (req, res) => {
+        console.log(req)
+    });
 // app.use('/graphql', (req, res, next) => {
 //     return graphqlHTTP({
 //         schema: schema.graphqlObj,
@@ -53,6 +60,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use(express.static(__dirname+'/public'));
 // include the routes path here
 require('./server/routes')(app, wagner);
 

@@ -9,13 +9,18 @@ const dbconfig = config.get('nodemailer_auth');
 const fs = require('fs');
 const { reject } = require('async');
 const unirest = require('unirest')
-// const Book = require('../models/book');
-// const Author = require('../models/Author');
+const { ObjectTypeComposer, schemaComposer } = require('graphql-compose')
+const { createWriteStream, mkdir } = require("fs");
+const { GraphQLFileLoader } = require('graphql-tools');
+// const { GraphQLUpload } = require('apollo-upload-server')
+const { GraphQLUpload } = require('graphql-upload');
+
+// schemaComposer.add(GraphQLUpload);
 
 const {
     GraphQLObjectType, GraphQLString,
     GraphQLID, GraphQLInt, GraphQLSchema,
-    GraphQLList, GraphQLNonNull
+    GraphQLList, GraphQLNonNull,
 } = graphql;
 let RootQuery, Mutation
 Schema = (function (wagner) {
@@ -26,6 +31,7 @@ Schema = (function (wagner) {
     }
 
     const storeFS = ({ stream, filename }) => {
+        console.log("33", stream)
         const uploadDir = '../../public/photos';
         const path = `${uploadDir}/${filename}`;
         return new Promise((resolve, reject) =>
@@ -41,6 +47,23 @@ Schema = (function (wagner) {
                 .on('finish', () => resolve({ path }))
         );
     }
+
+    const storeUpload = async ({ stream, filename, mimetype }) => {
+        // const id = shortid.generate();
+        const path = `images/${"id"}-${filename}`;
+        return new Promise((resolve, reject) =>
+            stream
+                .pipe(createWriteStream(path))
+                .on("finish", () => resolve({ id, path, filename, mimetype }))
+                .on("error", reject)
+        );
+    };
+    const processUpload = async (upload) => {
+        const { createReadStream, filename, mimetype } = await upload;
+        const stream = createReadStream();
+        const file = await storeUpload({ stream, filename, mimetype });
+        return file;
+    };
 
     async function authCheck(req) {
         // return new Promise(function(resolve, reject) {
@@ -78,6 +101,7 @@ Schema = (function (wagner) {
             full_name: { type: GraphQLString },
             city: { type: GraphQLString },
             authToken: { type: GraphQLString },
+            profile_pic: { type: GraphQLString }
         })
     })
 
@@ -90,7 +114,7 @@ Schema = (function (wagner) {
         })
     })
 
-   
+
     //RootQuery describe how users can use the graph and grab data.
     //E.g Root query to get all authors, get all books, get a particular 
     //book or get a particular author.
@@ -294,11 +318,11 @@ Schema = (function (wagner) {
                 type: AuthorType,
                 agrs: {
                     email_id: { type: new GraphQLNonNull(GraphQLString) },
-                    password: { type: new GraphQLNonNull(GraphQLString) },
-                    full_name: { type: new GraphQLNonNull(GraphQLString) },
-                    city: { type: new GraphQLNonNull(GraphQLString) },
-                    profile_pic: { type: new GraphQLNonNull(GraphQLString) },
-                    file: { type: new GraphQLNonNull(GraphQLString) }
+                    // password: { type: new GraphQLNonNull(GraphQLString) },
+                    // full_name: { type: new GraphQLNonNull(GraphQLString) },
+                    // city: { type: new GraphQLNonNull(GraphQLString) },
+                    // profile_pic: { type: GraphQLUpload },
+                    // file: { type: new GraphQLNonNull(GraphQLString) }
                 },
                 async resolve(parent, args) {
                     const { filename, mimetype, createReadStream } = await args.file;
@@ -422,7 +446,7 @@ Schema = (function (wagner) {
                 args: {
                     token: { type: new GraphQLNonNull(GraphQLString) },
                     loginType: { type: new GraphQLNonNull(GraphQLString) },
-                    fbEmail: { type: GraphQLString },   
+                    fbEmail: { type: GraphQLString },
                 },
                 resolve(parent, args, req) {
                     return new Promise(async function (resolve, reject) {
@@ -442,8 +466,8 @@ Schema = (function (wagner) {
                             console.log("Data == ", data.data)
                             if (!data.data.email) {
                                 reject('Please provide email access');
-                            } 
-    
+                            }
+
                             var User = global_wagner.get("Persons")
                             let user = await User.findOne({ email_id: data.data.email })
                             if (user) {
@@ -475,9 +499,52 @@ Schema = (function (wagner) {
                         })
                     })
                 }
-            }
+            },
+            uploadAvatar: {
+                type: AuthorType,
+                args: {
+                    avatar: {
+                        type: GraphQLUpload
+                    }
+                },
+                async resolve(parent, args, req) {
+                    // console.log(args, req)
+                    const { filename, mimetype, createReadStream: apolloFileStream } = await args.avatar;
+                    const tempFilename = `/tmp/${Date.now()}/${filename}`;
+                    const stream = apolloFileStream();
+                    const wstream = createWriteStream(tempFilename);
+                    await new Promise((resolve, reject) => {
+                        stream
+                            .pipe(wstream)
+                            .on('finish', () => resolve())
+                            .on('error', () => reject());
+                    });
+                    const rstream = createReadStream(tempFilename);
+                    const data = new FormData();
+                    data.append('file', rstream);
+                    console.log(data)
+                    // const stream = createReadStream();
+                    // stream.on('error', error => {
+                    //     if (stream.truncated)
+                    //         // delete the truncated file
+                    //         // fs.unlinkSync(path);
+                    //     reject(error);
+                    // })
+                    // .pipe(console.log("pipe"))
+                    // stream.pipe(() => {
+                    //     console.log('pipe')
+                    // })
+                    // const { filename, mimetype, createReadStream } = await args.avatar;
+                    // const stream = createReadStream
+                    // const pathObj = await storeFS({ stream, filename });
+                    // const fileLocation = pathObj.path;
+                    // console.log(fileLocation)
+                    // return true
+                }
+            },
         }
     });
+
 
     return Schema;
 
